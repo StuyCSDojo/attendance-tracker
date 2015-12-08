@@ -13,11 +13,16 @@ The Attendance Tracker is built on Python 2.7.6 and requires Flask and the
 Google API.
 
 ```
-$ pip install --upgrade flask google-api-python-client gspread
+$ pip install --upgrade flask google-api-python-client gspread PyOpenSSL
 ```
+
+### For Development
 
  - https://github.com/burnash/gspread
  - http://gspread.readthedocs.org/en/latest/oauth2.html
+
+If you are creating your own user for GSpread via the Google Developer Console, be sure to *SHARE* the spreadsheet with
+your Service account, as per: https://github.com/burnash/gspread/issues/226
 
 ### Running
 
