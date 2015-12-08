@@ -80,13 +80,6 @@ def get_known_osis():
         print("ERROR ({0}): {1}".format(e.errno, e.strerror))
         return None
 
-def create_column_for_date(date):
-    if COLUMN != -1:
-        return
-    COLUMN = get_available_column()
-    global ATTENDANCE_SHEET
-    ATTENDANCE_SHEET.update_cell(1, COLUMN, date)
-
 @app.route("/", methods=["GET"])
 def add_id():
     """
@@ -99,6 +92,7 @@ def add_id():
     Returns:
         None
     """
+    # Grab the parameters and exit if not provided or incorrect
     u_name = request.args.get('username')
     p_word = request.args.get('pword')
     if u_name is None or p_word is None:
@@ -111,6 +105,9 @@ def add_id():
     osis = request.args.get('osis')
     if osis is None:
         return "no_osis"
+    # Denote ATTENDANCE_SHEET as the global variable, not instance variable
+    global ATTENDANCE_SHEET
+    # Calculate the column for the specific day
     cols = get_columns()
     col_num = 0
     while col_num < len(cols):
@@ -118,5 +115,38 @@ def add_id():
             break
         col_num += 1
     col_num += 1 # The spreadsheet is 1 indexed, not 0 indexed
+    # Update the date for that column:
+    ATTENDANCE_SHEET.update_cell(1, col_num, date)
+    # Get the row number (row for the osis)
     osis_nums = get_known_osis()
+    # Resize the table!
+    ATTENDANCE_SHEET.resize(len(osis_nums), len(cols))
+    # Keep in mind that osis_nums should be sorted
+    row_num = 1
+    while row_num < len(osis_nums):
+        # If the osis matches, stop iterating
+        if osis_nums[row_num] == osis:
+            break
+        # Convert the values into integers
+        # If the osis is between the values, insert a row
+        intval = -1
+        intosis = -1
+        try:
+            intval = int(osis_nums[row_num])
+            intosis = int(osis)
+        except:
+            row_num += 1
+            continue
+        if int(osis_nums[row_num]) < int(osis):
+            ATTENDANCE_SHEET.insert_row(["" for i in cols], row_num + 1)
+            ATTENDANCE_SHEET.update_cell(row_num + 1, 1, osis)
+            break
+        # Increase the counter
+        row_num += 1
+    # When we are done iterating to get the osis, mark as present
+    ATTENDANCE_SHEET.update_cell(row_num + 1, col_num, 'X')
+
+if __name__ == "__main__":
+    app.debug = False
+    app.run(host='0.0.0.0', port=11235)
 
