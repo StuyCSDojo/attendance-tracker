@@ -11,6 +11,7 @@ class gsheet:
     def __init__(self):
         """
         Required __init__ method (constructor) for all Python classes
+        Ensures that the credential variables are 'None'
 
         Params:
             None
@@ -86,7 +87,7 @@ class gsheet:
             The sheet if successful, None otherwise
         """
         try:
-            sheet = self.g_auth.open(name).sheet1
+            sheet = self.g_auth.open(name)
             return sheet
         except:
             return None
@@ -102,8 +103,40 @@ class gsheet:
             The sheet if successful, None otherwise
         """
         try:
-            sheet = self.g_auth.open_by_key(key).sheet1
+            sheet = self.g_auth.open_by_key(key)
             return sheet
         except:
             return None
+
+    def get_list_of_sheets(self, spreadsheet):
+        """
+        Returns a list of all the worksheets, given a spreadsheet
+
+        Params:
+            spreadsheet - A spreadsheet object obtained from
+                          'get_sheet_from_name' or 'get_sheet_from_key'
+
+        Returns:
+            A list of all the worksheets contained inside the spreadsheet, None
+            otherwise.
+        """
+        try:
+            wsheets = spreadsheet.worksheets()
+            return wsheets
+        except:
+            return None
+
+    def insert_value_into_cell(self, worksheet, cell, value):
+        """
+        Inserts a value into a cell of the worksheet
+
+        Params:
+            worksheet - A worksheet object to insert into
+            cell - The cell location (i.e. 'A1', 'H9', 'Z54') to insert at
+            value - A string to put into the cell
+
+        Returns:
+            None
+        """
+        worksheet.update_acell(cell, value)
 
