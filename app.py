@@ -1,5 +1,9 @@
 from flask import Flask, request
 
+import datetime
+from datetime import datetime
+import time
+
 from utils.gsheets import gsheet
 import utils.db as db
 import utils.project_constants as constants
@@ -37,20 +41,51 @@ def load_attendance_sheet():
     ATTENDANCE_SHEET = worksheets[0]
     return True
 
-def get_available_column():
+def get_columns():
     """
-    Gets the index (starting with coordinate 1)  of the next available column
+    Gets the row 1 elements of all used columns
 
     Params:
         None
 
     Returns:
-        None
+        A list of strings if successful, None otherwise
     """
     load_attendance_sheet() # Load the attendance sheet it is not yet loaded
     global ATTENDANCE_SHEET
-    HEADING = ATTENDANCE_SHEET.row_values(1)
-    return len(ATTENDANCE_SHEET) + 1
+    try:
+        column_headers = ATTENDANCE_SHEET.row_values(1)
+        return column_headers
+    except Exception as e:
+        print("ERROR ({0}): {1}".format(e.errno, e.strerror))
+        return None
+
+def get_known_osis():
+    """
+    Gets a list of known osis numbers. We know that the first column is a list
+    of all the osis numbers, where the 0th index of the list is "OSIS"
+
+    Params:
+        None
+
+    Returns:
+        A list of strings if successful, None otherwise
+    """
+    load_attendance_sheet() # Load the attendance sheet it is not yet loaded
+    global ATTENDANCE_SHEET
+    try:
+        osis_numbers = ATTENDANCE_SHEET.col_values(1)
+        return osis_numbers
+    except Exception as e:
+        print("ERROR ({0}): {1}".format(e.errno, e.strerror))
+        return None
+
+def create_column_for_date(date):
+    if COLUMN != -1:
+        return
+    COLUMN = get_available_column()
+    global ATTENDANCE_SHEET
+    ATTENDANCE_SHEET.update_cell(1, COLUMN, date)
 
 @app.route("/", methods=["GET"])
 def add_id():
@@ -67,5 +102,21 @@ def add_id():
     u_name = request.args.get('username')
     p_word = request.args.get('pword')
     if u_name is None or p_word is None:
-        return "Failed"
+        return "no_creds"
+    if not db.admin_exists(u_name, p_word):
+        return "bad_login"
+    date = request.args.get('date')
+    if date is None:
+        date = str(datetime.now())[0:10]
+    osis = request.args.get('osis')
+    if osis is None:
+        return "no_osis"
+    cols = get_columns()
+    col_num = 0
+    while col_num < len(cols):
+        if cols[col_num] == date:
+            break
+        col_num += 1
+    col_num += 1 # The spreadsheet is 1 indexed, not 0 indexed
+    osis_nums = get_known_osis()
 
