@@ -1,5 +1,5 @@
 import sqlite3
-import hasb
+import hash
 
 DB_NAME = "admins.db"
 CREATE_QUERY = "CREATE TABLE IF NOT EXISTS admins (username text,\
