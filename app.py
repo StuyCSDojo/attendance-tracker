@@ -57,7 +57,7 @@ def get_columns():
         column_headers = ATTENDANCE_SHEET.row_values(1)
         return column_headers
     except Exception as e:
-        print("ERROR ({0}): {1}".format(e.errno, e.strerror))
+        # print("ERROR ({0}): {1}".format(e.errno, e.strerror))
         return None
 
 def get_known_osis():
