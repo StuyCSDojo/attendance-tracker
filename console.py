@@ -14,7 +14,7 @@ def commander(query):
     if len(args) == 0:
         return True
     if args[0] == "list":
-        print db.list_admin
+        print db.list_admin()
         return True
     if args[0] == "add":
         if len(args) != 3:
