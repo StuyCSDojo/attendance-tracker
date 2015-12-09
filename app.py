@@ -148,5 +148,5 @@ def add_id():
 
 if __name__ == "__main__":
     app.debug = False
-    app.run(host='0.0.0.0', port=11235)
+    app.run(host=os.getenv(‘IP’, ‘0.0.0.0’),port=int(os.getenv(‘PORT’, 11235)))
 
