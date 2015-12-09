@@ -37,7 +37,7 @@ def list_admin():
         A list of all the admins in the database
     """
     init_tables()
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     result = list(c.execute(LIST_QUERY))
     conn.close()
@@ -57,7 +57,7 @@ def admin_exists(username, password):
         False otherwise
     """
     init_tables()
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     PARAMS = (username , hash.password_hash(password))
     result = list(c.execute(SELECT_QUERY, PARAMS))
@@ -76,7 +76,7 @@ def add_admin(username, password):
         None
     """
     init_tables()
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     PARAMS = (username, hash.password_hash(password))
     c.execute(INSERT_QUERY, PARAMS)
@@ -96,7 +96,7 @@ def remove_admin(username, password):
         None
     """
     init_tables()
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     PARAMS = (username, hash.password_hash(password))
     c.execute(DELETE_QUERY, PARAMS)
