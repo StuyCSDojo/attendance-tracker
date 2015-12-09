@@ -80,7 +80,7 @@ def get_known_osis():
         print("ERROR ({0}): {1}".format(e.errno, e.strerror))
         return None
 
-@app.route("/", methods=["GET"])
+@app.route("/")
 def add_id():
     """
     Adds a single ID into the google spreadsheet, given data in the GET
@@ -101,7 +101,8 @@ def add_id():
         return "bad_login"
     date = request.args.get('date')
     if date is None:
-        date = str(datetime.now())[0:10]
+        date = str(datetime.now())[0:10].replace("-", "_")
+        print("No given date. Generating from system time: " + str(date))
     osis = request.args.get('osis')
     if osis is None:
         return "no_osis"
@@ -115,12 +116,12 @@ def add_id():
             break
         col_num += 1
     col_num += 1 # The spreadsheet is 1 indexed, not 0 indexed
-    # Update the date for that column:
-    ATTENDANCE_SHEET.update_cell(1, col_num, date)
     # Get the row number (row for the osis)
     osis_nums = get_known_osis()
     # Resize the table!
-    ATTENDANCE_SHEET.resize(len(osis_nums), len(cols))
+    ATTENDANCE_SHEET.resize(len(osis_nums) + 1, len(cols) + 1)
+    # Update the date for that column:
+    ATTENDANCE_SHEET.update_cell(1, col_num, date)
     # Keep in mind that osis_nums should be sorted
     row_num = 1
     while row_num < len(osis_nums):
@@ -137,14 +138,16 @@ def add_id():
         except:
             row_num += 1
             continue
-        if int(osis_nums[row_num]) < int(osis):
+        if int(osis_nums[row_num]) > int(osis):
+            print("Unrecognized OSIS. Adding to sheet")
             ATTENDANCE_SHEET.insert_row(["" for i in cols], row_num + 1)
-            ATTENDANCE_SHEET.update_cell(row_num + 1, 1, osis)
             break
         # Increase the counter
         row_num += 1
     # When we are done iterating to get the osis, mark as present
+    ATTENDANCE_SHEET.update_cell(row_num + 1, 1, str(osis))
     ATTENDANCE_SHEET.update_cell(row_num + 1, col_num, 'X')
+    return "OK"
 
 if __name__ == "__main__":
     app.debug = False
