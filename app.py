@@ -2,7 +2,7 @@ from flask import Flask, request
 
 import datetime
 from datetime import datetime
-import time
+import time, os
 
 from utils.gsheets import gsheet
 import utils.db as db
@@ -148,5 +148,5 @@ def add_id():
 
 if __name__ == "__main__":
     app.debug = False
-    app.run(host=os.getenv(‘IP’, ‘0.0.0.0’),port=int(os.getenv(‘PORT’, 11235)))
+    app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 11235)))
 
