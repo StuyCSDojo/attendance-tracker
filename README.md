@@ -13,7 +13,7 @@ The Attendance Tracker is built on Python 2.7.6 and requires Flask and the
 Google API.
 
 ```
-$ sudo apt-get install python-dev libssl-dev
+$ sudo apt-get install python-dev libssl-dev libffi-dev
 $ pip install --upgrade flask google-api-python-client gspread PyOpenSSL
 ```
 
