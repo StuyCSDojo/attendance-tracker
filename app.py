@@ -41,7 +41,7 @@ def load_attendance_sheet():
     ATTENDANCE_SHEET = worksheets[0]
     return True
 
-def get_columns():
+def get_columns(try_again=True):
     """
     Gets the row 1 elements of all used columns
 
@@ -58,7 +58,12 @@ def get_columns():
         return column_headers
     except Exception as e:
         # print("ERROR ({0}): {1}".format(e.errno, e.strerror))
-        return None
+        if try_again:
+            ATTENDANCE_SHEET = None
+            load_attendance_sheet()
+            return get_columns(try_again=False)
+        else:
+            return None
 
 def get_known_osis():
     """
@@ -150,6 +155,7 @@ def add_id():
     return "OK"
 
 if __name__ == "__main__":
-    app.debug = False
-    app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+    app.debug = True
+    # app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+    app.run("0.0.0.0", 11235)
 
