@@ -57,7 +57,6 @@ def get_columns(try_again=True):
         column_headers = ATTENDANCE_SHEET.row_values(1)
         return column_headers
     except Exception as e:
-        # print("ERROR ({0}): {1}".format(e.errno, e.strerror))
         if try_again:
             ATTENDANCE_SHEET = None
             load_attendance_sheet()
@@ -156,6 +155,5 @@ def add_id():
 
 if __name__ == "__main__":
     app.debug = True
-    # app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
     app.run("0.0.0.0", 11235)
 

@@ -57,7 +57,6 @@ class gsheet:
             return True
         except Exception as e:
             print("Authorization Failed.")
-            # print("ERROR ({0}): {1}".format(e.errno, e.strerror))
             return False
 
     def logout_credentials(self):
