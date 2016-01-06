@@ -2,11 +2,12 @@ from flask import Flask, request
 
 import datetime
 from datetime import datetime
-import time, os
+import time, os, argparse
 
 from utils.gsheets import gsheet
 import utils.db as db
 import utils.project_constants as constants
+import utils.DevNull as DevNull
 
 app = Flask(__name__)
 
@@ -154,6 +155,31 @@ def add_id():
     return "OK"
 
 if __name__ == "__main__":
-    app.debug = True
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-d",
+        "--debug",
+        help="Sets Flask's app.debug value to True",
+        action="store_true"
+    )
+    parser.add_argument(
+        "-s",
+        "--silent",
+        help="Silences STDOUT",
+        action="store_true"
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        help="Silences STDERR",
+        action="store_true"
+    )
+    args = parser.parse_args()
+    if args.debug:
+        app.debug = True
+    if args.silent:
+        sys.stdout = DevNull()
+    if args.quiet:
+        sys.stderr = DevNull()
     app.run("0.0.0.0", 11235)
 
