@@ -27,6 +27,8 @@ your Service account, as per: https://github.com/burnash/gspread/issues/226
 
 ### Running
 
+#### Create admin accounts
+
 To run the application, you must first create admin credentials for the app. Do this via `console.py`:
 
 ```
@@ -37,9 +39,24 @@ $ python console.py
 >> exit
 ```
 
-Next, you must obtain a JSON file for a Google API Service account. See the links provided in the 'For Development' section
-to learn how. Save the JSON file in the *SAME* folder as `app.py` (i.e. the project root folder) as `gcreds.json`. The name *MUST*
-be `gcreds.json`.
+#### Google Credentials
+
+Next, you must obtain a JSON file for a Google API Service account. See the links provided in the 'For Development'
+section to learn how. Save the JSON file in the *SAME* folder as `app.py` (i.e. the project root folder) as
+`gcreds.json`. The name *MUST* be `gcreds.json`.
+
+#### Change the Spreadsheet title
+
+In `utils/project_constants.py`, you will see that the last line contains the name of the spreadsheet:
+
+```
+STUYCS_DOJO_ATTENDANCE_SHEET_NAME = "cs_dojo_attendance_2015-2016"
+```
+
+This file functions as a config file for the application. Change the `STUYCS_DOJO_ATTENDANCE_SHEET_NAME`
+variable to a string, containing the name of the Spreadsheet you wish to access.
+
+#### Starting up the application
 
 To run the application, simply start the server using:
 
