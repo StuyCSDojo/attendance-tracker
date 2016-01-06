@@ -2,7 +2,7 @@ from flask import Flask, request
 
 import datetime
 from datetime import datetime
-import time, os, argparse
+import time, os, argparse, sys
 
 from utils.gsheets import gsheet
 import utils.db as db
@@ -163,12 +163,6 @@ if __name__ == "__main__":
         action="store_true"
     )
     parser.add_argument(
-        "-s",
-        "--silent",
-        help="Silences STDOUT",
-        action="store_true"
-    )
-    parser.add_argument(
         "-q",
         "--quiet",
         help="Silences STDERR",
@@ -177,9 +171,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.debug:
         app.debug = True
-    if args.silent:
-        sys.stdout = DevNull()
     if args.quiet:
-        sys.stderr = DevNull()
+        sys.stderr = DevNull.DevNull()
     app.run("0.0.0.0", 11235)
 
