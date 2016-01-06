@@ -47,6 +47,8 @@ To run the application, simply start the server using:
 $ python app.py
 ```
 
+For more run options, run `python app.py -h`
+
 ### Contacting the Server via CURL
 
 You can contact the server via a web browser, `wget` request, or `curl` request as shown below:
