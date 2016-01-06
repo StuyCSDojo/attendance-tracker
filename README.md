@@ -57,7 +57,7 @@ You can contact the server via a web browser, `wget` request, or `curl` request 
 $ curl -s -X GET "${SERVER_ADDR}?username=${ADMIN_NAME}&pword=${ADMIN_PWORD}&osis=${barcode}&date=${DATE}"
 ```
 
-The 'osis' is a New York City school ID. For users not implementing this app for non-NYC schools, you can browse through the source
+The 'osis' is a New York City school ID. For users not implementing this app for NYC schools, you can browse through the source
 to change the variable name to something else, such as `data`.
 
 Possible responses:
