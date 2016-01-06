@@ -1,4 +1,5 @@
 import utils.db as db
+import getpass
 
 def commander(query):
     """
@@ -10,17 +11,36 @@ def commander(query):
     Returns:
         True if successful execution, False otherwise
     """
-    args = query.split(" ")
+    args = query.strip().split(" ")
     if len(args) == 0:
         return True
+    # >> list
+    # Lists out the admins inside the database
     if args[0] == "list":
-        print db.list_admin()
+        for admin in db.list_admin():
+            print admin
         return True
-    if args[0] == "add":
-        if len(args) != 3:
-            return False
+    # >> add username password
+    # Adds a new user with credentials username:password
+    if args[0] == "add" and len(args) == 3:
         db.add_admin(args[1], args[2])
         return True
+    # >> remove username
+    # Exits immediately if 'username' doesn't exist. Otherwise, it will prompt
+    # for the password of 'username', and if validated, will delete the user.
+    if args[0] == "remove" and len(args) == 2:
+        if not db.username_exists(args[1]):
+            return False
+        pword = str(getpass.getpass("Password: "))
+        if db.admin_exists(args[1], pword):
+            db.remove_admin(args[1], pword)
+            return True
+        else:
+            return False
+    # >> exit
+    # Exits the console
+    if args[0].upper() == "EXIT":
+        exit(0)
     return False
 
 while True:

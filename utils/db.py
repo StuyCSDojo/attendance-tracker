@@ -4,6 +4,7 @@ import hash
 DB_NAME = "admins.db"
 CREATE_QUERY = "CREATE TABLE IF NOT EXISTS admins (username text,\
         password_hash text);"
+USER_QUERY = "SELECT * FROM admins WHERE username = ?;"
 SELECT_QUERY = "SELECT * FROM admins WHERE username = ? AND password_hash = ?;"
 LIST_QUERY = "SELECT * FROM admins;"
 INSERT_QUERY = "INSERT INTO admins VALUES (?, ?);"
@@ -42,6 +43,24 @@ def list_admin():
     result = list(c.execute(LIST_QUERY))
     conn.close()
     return result
+
+def username_exists(username):
+    """
+    Check if an admin with specified username exists in the database
+
+    Params:
+        username - A string containing the admin's username
+
+    Returns:
+        True if the specified username exists in the database, False otherwise
+    """
+    init_tables()
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    PARAMS = (username,)
+    result = list(c.execute(USER_QUERY, PARAMS))
+    conn.close()
+    return len(result) > 0
 
 def admin_exists(username, password):
     """
