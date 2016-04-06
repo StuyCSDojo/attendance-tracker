@@ -1,7 +1,7 @@
 import sqlite3
 import hash
 
-DB_NAME = "admins.db"
+DB_NAME = "/home/ethanet/attendance-tracker/admins.db"
 CREATE_QUERY = "CREATE TABLE IF NOT EXISTS admins (username text,\
         password_hash text);"
 USER_QUERY = "SELECT * FROM admins WHERE username = ?;"
